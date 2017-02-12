@@ -20,7 +20,7 @@ const gitPull = () => {
   });
 
   git.on( 'close', code => {
-      console.log( `child process exited with code ${code}` );
+      console.log( `child process exiteds with code ${code}` );
   });
 }
 
