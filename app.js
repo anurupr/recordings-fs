@@ -5,7 +5,7 @@ const gitPull = () => {
   const
       spawn = require( 'child_process' ).spawn,
       git = spawn( 'git', [ 'pull'] , {
-          cwd:  "C:\\"
+          cwd:  "C:\\recording-fs\\"
       });
 
   git.stdout.on( 'data', data => {
