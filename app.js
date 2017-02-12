@@ -8,6 +8,9 @@ const gitPull = () => {
           cwd:  "C:\\recording-fs\\"
       });
 
+
+      console.log('git', git);
+
   git.stdout.on( 'data', data => {
       console.log( `stdout: ${data}` );
   });
