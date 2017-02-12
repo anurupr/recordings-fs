@@ -4,7 +4,7 @@ const express = require('express');
 const gitPull = () => {
   const
       spawn = require( 'child_process' ).spawn,
-      git = spawn( 'git pull' , {
+      git = spawn( 'git', ['pull'] , {
           cwd:  "C:\\recording-fs\\"
       });
 
