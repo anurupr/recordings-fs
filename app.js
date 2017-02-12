@@ -4,7 +4,9 @@ const express = require('express');
 const gitPull = () => {
   const
       spawn = require( 'child_process' ).spawn,
-      git = spawn( 'git', [ 'pull'] ,"C:\\");
+      git = spawn( 'git', [ 'pull'] , {
+          cwd:  "C:\\"
+      });
 
   git.stdout.on( 'data', data => {
       console.log( `stdout: ${data}` );
