@@ -25,6 +25,7 @@ const app = express();
 
 app.post('/repo', (req, res, rext) => {
   gitPull();
+  res.status(200).end('ok');
 })
 
 
