@@ -3,13 +3,13 @@ const express = require('express');
 
 const gitPull = () => {
   const
-      spawn = require( 'child_process' ).spawn,
-      git = spawn( 'git', ['pull'] , {
-          cwd:  "C:\\recording-fs\\"
+      spawn = require( 'child_process' ).exec,
+      git = spawn( 'git pull' , {
+          cwd:  "C:\\recordings-fs\\"
       });
 
-      console.log('test');
-      console.log('git', git);
+      //console.log('test');
+      //console.log('git', git);
 
   git.stdout.on( 'data', data => {
       console.log( `stdout: ${data}` );
