@@ -1,5 +1,6 @@
 'use strict';
 const express = require('express');
+const fs = require('fs');
 
 const root = 'C:\\';
 const gitPull = () => {
@@ -36,7 +37,7 @@ app.post('/repo', (req, res, rext) => {
 
 
 app.get('/static', (req, res, next) => {
-  var files = fs.readdirSync(root);
+  const files = fs.readdirSync(root);
 
   var streamfiles = files.filter((file) => {
     return file.indexOf('tv') != -1;
