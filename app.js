@@ -34,7 +34,6 @@ const convertToWindows = (path) => {
 };
 
 const getStreams = (req, res, next) => {
-
   const files = fs.readdirSync(root);
 
   var streamfiles = files.filter((file) => {
@@ -44,16 +43,31 @@ const getStreams = (req, res, next) => {
   res.status(200).end(JSON.stringify(streamfiles));
 };
 
-
-
-const getRecordings = (req, res, next) => {
-  const recording = req.params.recording;
-  if(recording != undefined)
-    var files = fs.readdirSync(root + convertToWindows(recording) + "\\recordings\\");
-
-
-  res.status(200).end(JSON.stringify(files));
+const getChannels = (req, res, next) => {
+  const channeltype = req.params.channeltype;
+  if(channeltype != undefined){
+    var files = fs.readdirSync(root + channeltype + "\\recordings\\");
+    res.status(200).end(JSON.stringify(files));
+  }
+  else{
+    res.status(500).end(JSON.stringify({message: "Couldnt find channel"}));
+  }
 };
+
+const getRecordingList = (req, res, next) => {
+   const channeltype = req.params.channeltype;
+   const channel = req.params.channel;
+
+   if(channeltype != undefined && channel != undefined){
+     var files = fs.readdirSync(root + channeltype + "\\recordings\\" + channel);
+     res.status(200).end(JSON.stringify(files));
+   }
+   else{
+     res.status(500).end(JSON.stringify({message: "Couldnt find recordings"}));
+   }
+};
+
+
 
 
 app.post('/repo', (req, res, rext) => {
@@ -62,7 +76,8 @@ app.post('/repo', (req, res, rext) => {
 });
 
 app.get('/streams', getStreams);
-app.get('/streams/:recording', getRecordings);
+app.get('/streams/:channeltype', getChannels);
+app.get('/streams/:channeltype/:channel', getRecordingList);
 
 
 app.listen('8999', '0.0.0.0', () => {
