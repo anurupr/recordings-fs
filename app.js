@@ -2,10 +2,12 @@
 const express = require('express');
 const fs = require('fs');
 
+const cors = require('cors');
+
 const root = 'C:\\';
 const gitPull = () => {
   const
-      spawn = require( 'child_process' ).exec,
+      exec = require( 'child_process' ).exec,
       git = spawn( 'git pull' , {
           cwd:  "C:\\recordings-fs\\"
       });
@@ -26,8 +28,32 @@ const gitPull = () => {
   });
 }
 
+const npmInstall = () => {
+  const
+      exec = require( 'child_process' ).exec,
+      npm = spawn( 'npm install' , {
+          cwd:  "C:\\recordings-fs\\"
+      });
+
+      //console.log('test');
+      //console.log('git', git);
+
+  npm.stdout.on( 'data', data => {
+      console.log( `stdout: ${data}` );
+  });
+
+  npm.stderr.on( 'data', data => {
+      console.log( `stderr: ${data}` );
+  });
+
+  npm.on( 'close', code => {
+      console.log( `child process exiteds with code ${code}` );
+  });
+}
 
 const app = express();
+
+app.use(cors());
 
 const convertToWindows = (path) => {
   return path.replace("/", "\\");
@@ -81,7 +107,7 @@ const getTimedFiles = (req, res, next) => {
     }
 }
 
-app.post('/repo', (req, res, rext) => {
+app.post('/repo', (req, res, rext) => {    
   gitPull();
   res.status(200).end('ok');
 });
