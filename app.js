@@ -44,10 +44,12 @@ const getStreams = (req, res, next) => {
   res.status(200).end(JSON.stringify(streamfiles));
 };
 
-const staticpathf = (req, res, next) => {
+
+
+const getRecordings = (req, res, next) => {
   const path = req.params.path;
   if(path != undefined)
-    const files = fs.readdirSync(root + convertToWindows(path) + "\\recordings\\");
+    var files = fs.readdirSync(root + convertToWindows(path) + "\\recordings\\");
 
 
   res.status(200).end(JSON.stringify(files));
@@ -66,3 +68,9 @@ app.get('/streams/:recording', getRecordings);
 app.listen('8999', '0.0.0.0', () => {
   console.log('started');
 });
+
+
+if(process.argv[2]){
+  if(process.argv[2] === "git-test")
+    process.exit(0);
+}
