@@ -67,8 +67,19 @@ const getRecordingList = (req, res, next) => {
    }
 };
 
+const getTimedFiles = (req, res, next) => {
+    const channeltype = req.params.channeltype;
+    const channel = req.params.channel;
+    const recording = req.params.recording;
 
-
+    if(channeltype != undefined && channel != undefined && recording != undefined){
+      var files = fs.readdirSync(root + channeltype + "\\recordings\\" + channel + "\\" + recording);
+      res.status(200).end(JSON.stringify(files));
+    }
+    else{
+      res.status(500).end(JSON.stringify({message: "Couldnt find timed files"}));
+    }
+}
 
 app.post('/repo', (req, res, rext) => {
   gitPull();
@@ -78,12 +89,11 @@ app.post('/repo', (req, res, rext) => {
 app.get('/streams', getStreams);
 app.get('/streams/:channeltype', getChannels);
 app.get('/streams/:channeltype/:channel', getRecordingList);
-
+app.get('/streams/:channeltype/:channel/:recording', getTimedFiles);
 
 app.listen('8999', '0.0.0.0', () => {
   console.log('started');
 });
-
 
 if(process.argv[2]){
   if(process.argv[2] === "git-test")
