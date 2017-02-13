@@ -1,6 +1,7 @@
 'use strict';
 const express = require('express');
 
+const root = 'C:\\';
 const gitPull = () => {
   const
       spawn = require( 'child_process' ).exec,
@@ -31,7 +32,19 @@ const app = express();
 app.post('/repo', (req, res, rext) => {
   gitPull();
   res.status(200).end('oks');
-})
+});
+
+
+app.get('/static', (req, res, next) => {
+  var files = fs.readdirSync(root);
+
+  var streamfiles = files.filter((file) => {
+    return file.indexOf('tv') != -1;
+  });
+
+
+  res.status(200).end(JSON.stringify(streamfiles));
+});
 
 
 app.listen('8999', '0.0.0.0', () => {
