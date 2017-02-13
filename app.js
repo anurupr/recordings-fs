@@ -29,23 +29,38 @@ const gitPull = () => {
 
 const app = express();
 
+const convertToWindows = (path) => {
+  return path.replace("/", "\\");
+};
+
+const getStreams = (req, res, next) => {
+
+  const files = fs.readdirSync(root);
+
+  var streamfiles = files.filter((file) => {
+    return file.indexOf('tv') != -1;
+  };
+
+  res.status(200).end(JSON.stringify(streamfiles));
+};
+
+const staticpathf = (req, res, next) => {
+  const path = req.params.path;
+  if(path != undefined)
+    const files = fs.readdirSync(root + convertToWindows(path) + "\\recordings\\");
+
+
+  res.status(200).end(JSON.stringify(files));
+};
+
 
 app.post('/repo', (req, res, rext) => {
   gitPull();
   res.status(200).end('ok');
 });
 
-
-app.get('/static', (req, res, next) => {
-  const files = fs.readdirSync(root);
-
-  var streamfiles = files.filter((file) => {
-    return file.indexOf('tv') != -1;
-  });
-
-
-  res.status(200).end(JSON.stringify(streamfiles));
-});
+app.get('/streams', getStreams);
+app.get('/streams/:recording', getRecordings);
 
 
 app.listen('8999', '0.0.0.0', () => {
