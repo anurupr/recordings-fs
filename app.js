@@ -39,7 +39,7 @@ const getStreams = (req, res, next) => {
 
   var streamfiles = files.filter((file) => {
     return file.indexOf('tv') != -1;
-  };
+  });
 
   res.status(200).end(JSON.stringify(streamfiles));
 };
