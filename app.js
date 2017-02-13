@@ -5,7 +5,7 @@ const root = 'C:\\';
 const gitPull = () => {
   const
       spawn = require( 'child_process' ).exec,
-      git = spawn( 'git', ['pull'] , {
+      git = spawn( 'git', [' pull'] , {
           cwd:  "C:\\recordings-fs\\"
       });
 
@@ -31,7 +31,7 @@ const app = express();
 
 app.post('/repo', (req, res, rext) => {
   gitPull();
-  res.status(200).end('oks');
+  res.status(200).end('ok');
 });
 
 
