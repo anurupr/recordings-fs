@@ -47,9 +47,9 @@ const getStreams = (req, res, next) => {
 
 
 const getRecordings = (req, res, next) => {
-  const path = req.params.path;
-  if(path != undefined)
-    var files = fs.readdirSync(root + convertToWindows(path) + "\\recordings\\");
+  const recording = req.params.recording;
+  if(recording != undefined)
+    var files = fs.readdirSync(root + convertToWindows(recording) + "\\recordings\\");
 
 
   res.status(200).end(JSON.stringify(files));
