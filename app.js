@@ -107,7 +107,7 @@ const getTimedFiles = (req, res, next) => {
     }
 }
 
-app.post('/repo', (req, res, rext) => {    
+app.post('/repo', (req, res, rext) => {
   gitPull();
   res.status(200).end('ok');
 });
@@ -116,6 +116,10 @@ app.get('/streams', getStreams);
 app.get('/streams/:channeltype', getChannels);
 app.get('/streams/:channeltype/:channel', getRecordingList);
 app.get('/streams/:channeltype/:channel/:recording', getTimedFiles);
+
+app.get('*.mp4', (req, res, next) => {
+  console.log('request', req);
+});
 
 app.listen('8999', '0.0.0.0', () => {
   console.log('started');
