@@ -55,8 +55,13 @@ const app = express();
 
 app.use(cors());
 
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
+
 const convertToWindows = (path) => {
-  return path.replace("/", "\\");
+  return path.replaceAll("/", "\\");
 };
 
 const getStreams = (req, res, next) => {
@@ -118,7 +123,7 @@ app.get('/streams/:channeltype/:channel', getRecordingList);
 app.get('/streams/:channeltype/:channel/:recording', getTimedFiles);
 
 app.get('*.mp4', (req, res, next) => {
-  var path = req.originalUrl.replace("/streams/");
+  var path = req.originalUrl.replace("/streams/","");
   var winpath = root+convertToWindows(path);
 
   var ifPathExists = fs.existsSync(root+convertToWindows(path));
