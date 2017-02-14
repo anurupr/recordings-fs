@@ -132,11 +132,12 @@ app.get('*.mp4', (req, res, next) => {
   var winpath = root+convertToWindows(path);
 
   var ifPathExists = fs.existsSync(pathMapping[winpath]);
-  res.status(200).end(JSON.stringify({
-      path: winpath,
-      exists: ifPathExists
-   })
-  ) ;
+  if(ifPathExists) {
+    res.setHeader("content-type", "video/mp4");
+    fs.createReadStream(pathMapping[winpath]).pipe(res);
+  } else {
+    res.status(200).end("Cant find file");
+  }
 });
 
 app.listen('8999', '0.0.0.0', () => {
