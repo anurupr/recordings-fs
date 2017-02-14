@@ -8,7 +8,7 @@ const root = 'C:\\';
 const gitPull = () => {
   const
       exec = require( 'child_process' ).exec,
-      git = spawn( 'git pull' , {
+      git = exec( 'git pull' , {
           cwd:  "C:\\recordings-fs\\"
       });
 
