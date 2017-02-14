@@ -132,7 +132,7 @@ app.get('*.mp4', (req, res, next) => {
   var winpath = root+convertToWindows(path);
   var file = pathMapping[winpath];
   var ifPathExists = fs.existsSync(file);
-  //console.log('path', pathMapping[winpath]);
+  console.log('path', pathMapping[winpath]);
   if(ifPathExists) {
     res.setHeader("content-type", "video/mp4");
     ///fs.createReadStream(pathMapping[winpath]).pipe(res);
