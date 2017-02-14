@@ -5,6 +5,8 @@ const fs = require('fs');
 const cors = require('cors');
 
 const root = 'C:\\';
+
+var pathMapping = {};
 const gitPull = () => {
   const
       exec = require( 'child_process' ).exec,
@@ -105,6 +107,9 @@ const getTimedFiles = (req, res, next) => {
 
     if(channeltype != undefined && channel != undefined && recording != undefined){
       var files = fs.readdirSync(root + channeltype + "\\recordings\\" + channel + "\\" + recording);
+      files.forEach((file) => {
+        pathMapping[root + channeltype + "\\" + channel + "\\" + recording + "\\" + file] = root + channeltype + "\\recordings\\" + channel + "\\" + recording + "\\" + file;
+      });
       res.status(200).end(JSON.stringify(files));
     }
     else{
@@ -126,7 +131,7 @@ app.get('*.mp4', (req, res, next) => {
   var path = req.originalUrl.replace("/streams/","");
   var winpath = root+convertToWindows(path);
 
-  var ifPathExists = fs.existsSync(root+convertToWindows(path));
+  var ifPathExists = fs.existsSync(pathMapping[winpath]);
   res.status(200).end(JSON.stringify({
       path: winpath,
       exists: ifPathExists
