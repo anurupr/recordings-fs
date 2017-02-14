@@ -118,7 +118,9 @@ app.get('/streams/:channeltype/:channel', getRecordingList);
 app.get('/streams/:channeltype/:channel/:recording', getTimedFiles);
 
 app.get('*.mp4', (req, res, next) => {
-  console.log('request', req);
+  var path = req.originalUrl.replace("/streams/");
+  var ifPathExists = fs.existsSync(path);
+  res.status(200).end(""+ifPathExists);
 });
 
 app.listen('8999', '0.0.0.0', () => {
