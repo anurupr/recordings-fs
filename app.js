@@ -130,12 +130,45 @@ app.get('/streams/:channeltype/:channel/:recording', getTimedFiles);
 app.get('*.mp4', (req, res, next) => {
   var path = req.originalUrl.replace("/streams/","");
   var winpath = root+convertToWindows(path);
-
-  var ifPathExists = fs.existsSync(pathMapping[winpath]);
-  console.log('path', pathMapping[winpath]);
+  var file = pathMapping[winpath];
+  var ifPathExists = fs.existsSync(file);
+  //console.log('path', pathMapping[winpath]);
   if(ifPathExists) {
     res.setHeader("content-type", "video/mp4");
-    fs.createReadStream(pathMapping[winpath]).pipe(res);
+    ///fs.createReadStream(pathMapping[winpath]).pipe(res);
+    fs.stat(file, function(err, stats) {
+      if (err) {
+        if (err.code === 'ENOENT') {
+          // 404 Error if file not found
+          return res.sendStatus(404);
+        }
+      res.end(err);
+      }
+      var range = req.headers.range;
+      if (!range) {
+       // 416 Wrong range
+       return res.sendStatus(416);
+      }
+      var positions = range.replace(/bytes=/, "").split("-");
+      var start = parseInt(positions[0], 10);
+      var total = stats.size;
+      var end = positions[1] ? parseInt(positions[1], 10) : total - 1;
+      var chunksize = (end - start) + 1;
+
+      res.writeHead(206, {
+        "Content-Range": "bytes " + start + "-" + end + "/" + total,
+        "Accept-Ranges": "bytes",
+        "Content-Length": chunksize,
+        "Content-Type": "video/mp4"
+      });
+
+      var stream = fs.createReadStream(file, { start: start, end: end })
+        .on("open", function() {
+          stream.pipe(res);
+        }).on("error", function(err) {
+          res.end(err);
+        });
+    });
   } else {
     res.status(200).end("Cant find file");
   }
