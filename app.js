@@ -93,7 +93,14 @@ const getRecordingList = (req, res, next) => {
 
    if(channeltype != undefined && channel != undefined){
      var files = fs.readdirSync(root + channeltype + "\\recordings\\" + channel);
-     res.status(200).end(JSON.stringify(files));
+     var output = [];
+     files.forEach((file) => {
+        var subfiles = fs.readdirSync(root + channeltype + "\\recordings\\" + channel + "\\" + file);
+        if(subfiles.length > 0){
+          output.push(file);
+        }
+     });
+     res.status(200).end(JSON.stringify(output));
    }
    else{
      res.status(500).end(JSON.stringify({message: "Couldnt find recordings"}));
