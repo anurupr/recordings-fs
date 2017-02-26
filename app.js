@@ -73,8 +73,6 @@ const readHebrewSchedule = () => {
 
 const hebrewSchedule = readHebrewSchedule();
 
-
-
 const getStreams = (req, res, next) => {
   const files = fs.readdirSync(root);
 
@@ -116,15 +114,29 @@ const getRecordingList = (req, res, next) => {
    }
 };
 
+var filter = function(fields, index){
+  var f = {};
+
+  Object.keys(fields).forEach(function(key){
+    if(key.indexOf(index) !== -1){
+      f[key] = fields[key];
+    }
+  });
+
+  return f;
+};
+
 const getTimedFiles = (req, res, next) => {
     const channeltype = req.params.channeltype;
     const channel = req.params.channel;
     const recording = req.params.recording;
+    const hebrewSchedule = filter(hebrewSchedule[channel], recording);
 
     if(channeltype != undefined && channel != undefined && recording != undefined){
       var files = fs.readdirSync(root + channeltype + "\\recordings\\" + channel + "\\" + recording);
       files.forEach((file) => {
         pathMapping[root + channeltype + "\\" + channel + "\\" + recording + "\\" + file] = root + channeltype + "\\recordings\\" + channel + "\\" + recording + "\\" + file;
+        file = hebrewSchedule[recording+'_'+file.replace("_",":")+":00"] + " - " + file.replace("_",":");
       });
       res.status(200).end(JSON.stringify(files));
     }
