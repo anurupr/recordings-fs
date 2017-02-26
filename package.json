@@ -18,6 +18,7 @@
   "homepage": "https://github.com/anurupr/recordings-fs#readme",
   "dependencies": {
     "cors": "^2.8.1",
-    "express": "^4.14.1"
+    "express": "^4.14.1",
+    "jsonfile": "^2.4.0"
   }
 }

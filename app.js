@@ -1,8 +1,8 @@
 'use strict';
 const express = require('express');
 const fs = require('fs');
-
 const cors = require('cors');
+const jsonfile = require('jsonfile');
 
 const root = 'C:\\';
 
@@ -65,6 +65,15 @@ String.prototype.replaceAll = function(search, replacement) {
 const convertToWindows = (path) => {
   return path.replaceAll("/", "\\");
 };
+
+const readHebrewSchedule = () => {
+  var file = 'hebrew_schedule.json';
+  return jsonfile.readFileSync(file);
+}
+
+const hebrewSchedule = readHebrewSchedule();
+
+
 
 const getStreams = (req, res, next) => {
   const files = fs.readdirSync(root);
