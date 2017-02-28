@@ -156,11 +156,18 @@ app.get('/streams/:channeltype/:channel', getRecordingList);
 app.get('/streams/:channeltype/:channel/:recording', getTimedFiles);
 
 app.get('*.mp4', (req, res, next) => {
+  const channeltype = req.query.channeltype;
+  const channel = req.query.channel;
+  const recording = req.query.recording;
+  var path = root + '/' + channeltype + '/recordings' + '/' + channel + '/'
   var path = req.originalUrl.replace("/streams/","");
+  console.log('req.originalUrl', req.originalUrl);
+  res.status(200).end('OK');
+  return;
   var winpath = root+convertToWindows(path);
   var file = pathMapping[winpath];
   var ifPathExists = fs.existsSync(file);
-  console.log('path', pathMapping[winpath]);
+  // console.log('path', pathMapping[winpath]);
   if(ifPathExists) {
     res.setHeader("content-type", "video/mp4");
     ///fs.createReadStream(pathMapping[winpath]).pipe(res);
