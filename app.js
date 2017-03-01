@@ -130,14 +130,9 @@ const getTimedFiles = (req, res, next) => {
     const channeltype = req.params.channeltype;
     const channel = req.params.channel;
     const recording = req.params.recording;
-    const hebrewSchedule = filter(hebrewSchedule[channel], recording);
 
     if(channeltype != undefined && channel != undefined && recording != undefined){
       var files = fs.readdirSync(root + channeltype + "\\recordings\\" + channel + "\\" + recording);
-      files.forEach((file) => {
-        pathMapping[root + channeltype + "\\" + channel + "\\" + recording + "\\" + file] = root + channeltype + "\\recordings\\" + channel + "\\" + recording + "\\" + file;
-        file = hebrewSchedule[recording+'_'+file.replace("_",":")+":00"] + " - " + file.replace("_",":");
-      });
       res.status(200).end(JSON.stringify(files));
     }
     else{
@@ -159,14 +154,15 @@ app.get('*.mp4', (req, res, next) => {
   const channeltype = req.query.channeltype;
   const channel = req.query.channel;
   const recording = req.query.recording;
-  var path = root + '/' + channeltype + '/recordings' + '/' + channel + '/'
-  var path = req.originalUrl.replace("/streams/","");
-  console.log('req.originalUrl', req.originalUrl);
-  res.status(200).end('OK');
-  return;
-  var winpath = root+convertToWindows(path);
-  var file = pathMapping[winpath];
-  var ifPathExists = fs.existsSync(file);
+  console.log('url', req.originalUrl);
+  var split = req.originalUrl.split('?');
+  var replace = '/streams/'+channeltype+'/'+channel+'/'+recording+'/';
+  var file = split[0].replace(replace,'');
+  var path = root + channeltype + '/recordings' + '/' + channel + '/' + recording + '/' + file;
+
+  var winpath = convertToWindows(path);
+
+  var ifPathExists = fs.existsSync(winpath);
   // console.log('path', pathMapping[winpath]);
   if(ifPathExists) {
     res.setHeader("content-type", "video/mp4");
