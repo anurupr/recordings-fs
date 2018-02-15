@@ -150,14 +150,19 @@ app.get('/streams/:channeltype', getChannels);
 app.get('/streams/:channeltype/:channel', getRecordingList);
 app.get('/streams/:channeltype/:channel/:recording', getTimedFiles);
 
-app.get('*.mp4', (req, res, next) => {
-  const channeltype = req.query.channeltype;
-  const channel = req.query.channel;
-  const recording = req.query.recording;
+//app.get('*.mp4', (req, res, next) => {
+app.get('/streams/:channeltype/:channel/:recording/:file', (req, res, next) => {
+  //const channeltype = req.query.channeltype;
+  //const channel = req.query.channel;
+  //const recording = req.query.recording;
+  const channeltype = req.params.channeltype;
+  const channel = req.params.channel;
+  const recording = req.params.recording;
+  const file = req.params.file;
   console.log('url', req.originalUrl);
-  var split = req.originalUrl.split('?');
-  var replace = '/streams/'+channeltype+'/'+channel+'/'+recording+'/';
-  var file = split[0].replace(replace,'');
+  //var split = req.originalUrl.split('?');
+  //var replace = '/streams/'+channeltype+'/'+channel+'/'+recording+'/';
+  //var file = split[0].replace(replace,'');
   var path = root + channeltype + '/recordings' + '/' + channel + '/' + recording + '/' + file;
 
   var winpath = convertToWindows(path);
@@ -167,7 +172,7 @@ app.get('*.mp4', (req, res, next) => {
   if(ifPathExists) {
     res.setHeader("content-type", "video/mp4");
     ///fs.createReadStream(pathMapping[winpath]).pipe(res);
-    fs.stat(file, function(err, stats) {
+    fs.stat(winpath, function(err, stats) {
       if (err) {
         if (err.code === 'ENOENT') {
           // 404 Error if file not found
@@ -193,7 +198,7 @@ app.get('*.mp4', (req, res, next) => {
         "Content-Type": "video/mp4"
       });
 
-      var stream = fs.createReadStream(file, { start: start, end: end })
+      var stream = fs.createReadStream(winpath, { start: start, end: end })
         .on("open", function() {
           stream.pipe(res);
         }).on("error", function(err) {
